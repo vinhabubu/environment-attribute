@@ -24,7 +24,4 @@ export const RestApi = createApi({
   }),
 });
 
-export const {
-  useLoginMutation,
-  useRegisterMutation,
-} = RestApi;
+export const {useLoginMutation, useRegisterMutation} = RestApi;

@@ -23,7 +23,5 @@ export const issueSlice = createSlice({
 });
 
 // Part 4
-export const {
-  addUserInfo,
-} = issueSlice.actions;
+export const {addUserInfo} = issueSlice.actions;
 export default issueSlice.reducer;

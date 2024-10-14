@@ -16,12 +16,11 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
 
-import NavigationContainer from '~/navigators/NavigationContainer';
-import { defaultTheme } from './src/theme/theme';
+import {defaultTheme} from './src/theme/theme';
 import ModalContainer from './src/modal/ModalContainer';
-import { store } from './src/redux';
+import {store} from './src/redux';
 import RootNavigator from './src/navigators/RootNavigator';
-
+import NavigationContainer from './src/navigators/NavigationContainer';
 
 const App = () => {
   LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message

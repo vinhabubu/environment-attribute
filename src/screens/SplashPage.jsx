@@ -3,10 +3,8 @@ import React, {useEffect} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
-
 import {useDispatch} from 'react-redux';
 import getImages from '../libs/getImages';
-
 
 const SplashPage = () => {
   const navigation = useNavigation();
@@ -14,11 +12,7 @@ const SplashPage = () => {
 
   useEffect(() => {
     const handleNavigate = async () => {
-
-
-      setTimeout(() => {
-
-      }, 3000);
+      setTimeout(() => {}, 3000);
     };
     handleNavigate();
   }, []);

@@ -7,16 +7,26 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --write \"**/*.{tsx,jsx,js,css,ts}\""
   },
   "dependencies": {
+    "@react-native-picker/picker": "^2.8.1",
     "@react-navigation/bottom-tabs": "^6.6.1",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/stack": "^6.4.1",
     "@reduxjs/toolkit": "^2.2.8",
     "react": "18.3.1",
     "react-native": "0.75.4",
     "react-native-async-storage": "^0.0.1",
+    "react-native-gesture-handler": "^2.20.0",
+    "react-native-image-picker": "^7.1.2",
     "react-native-paper": "^5.12.5",
     "react-native-safe-area-context": "^4.11.0",
+    "react-native-screens": "^3.34.0",
+    "react-native-select-dropdown": "^4.0.1",
+    "react-native-star-rating-widget": "^1.9.1",
+    "react-native-svg": "^15.7.1",
     "react-native-vector-icons": "^10.2.0",
     "react-navigation": "^5.0.0",
     "react-redux": "^9.1.2"

@@ -1,11 +1,11 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {defaultTheme} from '~/theme/theme';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconName from 'react-native-vector-icons/FontAwesome';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import HomePage from '../screens/HomePage';
-
+import {defaultTheme} from '../theme/theme';
 
 const BottomBarNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -14,7 +14,7 @@ const BottomBarNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#000E90',
+          backgroundColor: '#4CA394',
           borderTopColor: defaultTheme?.colors?.primaryOrange,
           height: 68,
           alignItems: 'center',

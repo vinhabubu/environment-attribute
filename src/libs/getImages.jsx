@@ -1,7 +1,5 @@
-const images = {
+const images = {};
 
-  };
-
-  export default (imageName) => {
-    return images[imageName];
-  };
+export default imageName => {
+  return images[imageName];
+};

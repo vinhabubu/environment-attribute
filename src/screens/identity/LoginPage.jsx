@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   TextInput,
@@ -8,6 +8,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Dimensions} from 'react-native';
+import {useLoginMutation} from '../../redux/reducer/RestfulApi';
+import Toast from 'react-native-toast-message';
+import {useDispatch} from 'react-redux';
+import {addUserInfo} from '../../redux/reducer/IssueReducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 ('react-native');
 
 const screenWidth = Dimensions.get('window').width;
@@ -15,6 +20,46 @@ const screenWidth = Dimensions.get('window').width;
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [login, dataLogin] = useLoginMutation();
+  const dispatch = useDispatch();
+
+  const handleLogin = async () => {
+    if (email === '' || password === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid email or password',
+      });
+      return;
+    }
+
+    await login({
+      email: email,
+      password: password,
+    });
+  };
+
+  useEffect(() => {
+    if (dataLogin?.data) {
+      Toast.show({
+        type: 'success',
+        text1: 'Login successful',
+      });
+      dispatch(addUserInfo(dataLogin?.data));
+      const dataString = JSON.stringify(dataLogin?.data);
+      AsyncStorage.setItem('dataUser', dataString);
+      navigation.navigate('BottomTabNavigator');
+    }
+  }, [dataLogin, navigation, dispatch]);
+
+  useEffect(() => {
+    if (dataLogin?.error) {
+      console.log(dataLogin?.error);
+      Toast.show({
+        type: 'error',
+        text1: 'Login fail. Try again',
+      });
+    }
+  }, [dataLogin?.error]);
 
   return (
     <View style={styles.container}>
@@ -35,9 +80,7 @@ const LoginScreen = ({navigation}) => {
         secureTextEntry={true}
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('BottomTabNavigator')}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 

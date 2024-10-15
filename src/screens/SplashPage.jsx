@@ -5,6 +5,8 @@ import {Text} from 'react-native-paper';
 
 import {useDispatch} from 'react-redux';
 import getImages from '../libs/getImages';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {addUserInfo} from '../redux/reducer/IssueReducer';
 
 const SplashPage = () => {
   const navigation = useNavigation();
@@ -12,14 +14,23 @@ const SplashPage = () => {
 
   useEffect(() => {
     const handleNavigate = async () => {
-      setTimeout(() => {}, 3000);
+      const valueUser = await AsyncStorage.getItem('dataUser');
+      const dataUser = JSON.parse(valueUser);
+      setTimeout(() => {
+        if (dataUser?.token) {
+          dispatch(addUserInfo(dataUser));
+          navigation.navigate('BottomTabNavigator');
+        } else {
+          navigation.navigate('LoginPage');
+        }
+      }, 3000);
     };
     handleNavigate();
-  }, []);
+  }, [navigation]);
   return (
     <View style={styles.container}>
       <Image
-        source={getImages('')}
+        source={getImages('iconApp')}
         style={styles.imageStyle}
         resizeMode="center"
       />
@@ -32,13 +43,14 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: defaultTh?.colors?.background,
+    backgroundColor: '#4CA394',
     flex: 1,
   },
   textStyle: {
-    fontSize: 18,
-    fontWeight: '400',
+    fontSize: 16,
+    fontWeight: '700',
     marginTop: 8,
+    color: '#fff',
   },
   imageStyle: {
     height: 170,

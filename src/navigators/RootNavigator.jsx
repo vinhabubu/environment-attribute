@@ -5,6 +5,7 @@ import BottomBarNavigator from './BottomBarNavigator';
 import LoginScreen from '../screens/identity/LoginPage';
 import RegisterScreen from '../screens/identity/RegisterPage';
 import SplashPage from '../screens/SplashPage';
+import EditProfilePage from '../screens/EditProfilePage';
 
 const StackNavigator = createStackNavigator();
 const screenOptions = {headerShown: false};
@@ -13,10 +14,14 @@ const RootNavigator = () => {
   return (
     <StackNavigator.Navigator
       screenOptions={screenOptions}
-      initialRouteName="LoginPage">
+      initialRouteName="SplashPage">
       <StackNavigator.Screen name="SplashPage" component={SplashPage} />
       <StackNavigator.Screen name="LoginPage" component={LoginScreen} />
       <StackNavigator.Screen name="RegisterPage" component={RegisterScreen} />
+      <StackNavigator.Screen
+        name="EditProfilePage"
+        component={EditProfilePage}
+      />
       {/* <StackNavigator.Screen name="HomePage" component={HomePage} /> */}
       <StackNavigator.Screen
         name="BottomTabNavigator"

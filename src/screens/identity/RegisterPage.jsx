@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   TextInput,
@@ -8,15 +8,64 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {useRegisterMutation} from '../../redux/reducer/RestfulApi';
+import Toast from 'react-native-toast-message';
 
 const screenWidth = Dimensions.get('window').width;
 
 const RegisterScreen = ({navigation}) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
+  const [register, dataRegister] = useRegisterMutation();
+
+  const handleRegister = async () => {
+    if (
+      userName === '' ||
+      email === '' ||
+      password === '' ||
+      rePassword === ''
+    ) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please fill in all fields',
+      });
+      return;
+    }
+
+    if (password !== rePassword) {
+      Toast.show({
+        type: 'error',
+        text1: 'Passwords do not match',
+      });
+      return;
+    }
+
+    await register({
+      username: userName,
+      email: email,
+      password: password,
+    });
+  };
+
+  useEffect(() => {
+    if (dataRegister?.data) {
+      Toast.show({
+        type: 'success',
+        text1: 'Register successful',
+      });
+    }
+  }, [dataRegister]);
+
+  useEffect(() => {
+    if (dataRegister?.error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Register fail. Try again',
+      });
+    }
+  }, [dataRegister?.error]);
 
   return (
     <View style={styles.container}>
@@ -25,8 +74,8 @@ const RegisterScreen = ({navigation}) => {
       <TextInput
         style={styles.input}
         placeholder="User Name"
-        value={lastName}
-        onChangeText={setLastName}
+        value={userName}
+        onChangeText={setUserName}
       />
       <TextInput
         style={styles.input}
@@ -49,7 +98,7 @@ const RegisterScreen = ({navigation}) => {
         secureTextEntry={true}
       />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Create</Text>
       </TouchableOpacity>
 

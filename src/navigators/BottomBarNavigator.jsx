@@ -6,6 +6,7 @@ import IconName from 'react-native-vector-icons/FontAwesome';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import HomePage from '../screens/HomePage';
 import {defaultTheme} from '../theme/theme';
+import ProfilePage from '../screens/ProfilePage';
 
 const BottomBarNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -60,7 +61,7 @@ const BottomBarNavigator = () => {
       />
       <Tab.Screen
         name="School"
-        component={HomePage}
+        component={ProfilePage}
         options={{
           tabBarLabel: 'School',
           tabBarShowLabel: false,

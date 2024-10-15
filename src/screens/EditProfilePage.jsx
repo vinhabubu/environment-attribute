@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+} from 'react-native';
 
 const EditProfilePage = () => {
   // State to manage input fields
@@ -7,6 +17,7 @@ const EditProfilePage = () => {
   const [email, setEmail] = useState('yanchui@gmail.com');
   const [phone, setPhone] = useState('+14987889999');
   const [password, setPassword] = useState('ovFTbyVVCd');
+  const navigation = useNavigation();
 
   // Handler for updating profile
   const handleUpdate = () => {
@@ -17,16 +28,19 @@ const EditProfilePage = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View
+        style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 0}]}>
         <Text style={styles.headerTitle}>Edit Profile</Text>
-        <TouchableOpacity style={styles.shareIcon}>
+        <TouchableOpacity
+          style={styles.shareIcon}
+          onPress={() => navigation.goBack()}>
           {/* Placeholder for share icon */}
           <Text style={styles.shareText}>🔗</Text>
         </TouchableOpacity>
       </View>
 
       {/* Profile Picture */}
-      <View style={styles.profilePictureContainer}>
+      {/* <View style={styles.profilePictureContainer}>
         <Image
           source={{ uri: 'https://via.placeholder.com/100' }} // Replace with user's picture
           style={styles.profilePicture}
@@ -34,7 +48,7 @@ const EditProfilePage = () => {
         <TouchableOpacity>
           <Text style={styles.changePictureText}>Change Picture</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Edit Fields */}
       <View style={styles.form}>
@@ -81,19 +95,18 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: '#f0f0f0',
-    paddingHorizontal: 20,
-    paddingVertical: 30,
   },
   header: {
+    backgroundColor: '#367e7f',
+    padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 20,
   },
   headerTitle: {
     fontSize: 24,
+    color: '#fff',
     fontWeight: 'bold',
-    color: '#333',
   },
   shareIcon: {
     // Styling for share icon
@@ -119,10 +132,12 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.2,
     shadowRadius: 1,
     elevation: 3,
+    marginHorizontal: 20,
+    marginTop: 36,
   },
   input: {
     height: 40,
@@ -133,15 +148,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   updateButton: {
-    backgroundColor: '#333',
+    backgroundColor: '#4CA394',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 12,
     alignItems: 'center',
     marginTop: 20,
   },
   updateButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

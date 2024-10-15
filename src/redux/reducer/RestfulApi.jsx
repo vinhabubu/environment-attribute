@@ -5,18 +5,18 @@ import {createApi} from '@reduxjs/toolkit/query/react';
 
 export const RestApi = createApi({
   reducerPath: 'RestApi',
-  baseQuery: fetchBaseQuery({baseUrl: 'https://api.naviedu.dev/'}),
+  baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000/api/'}),
   endpoints: builder => ({
     login: builder.mutation({
       query: credentials => ({
-        url: 'v1/identity/login',
+        url: 'auth/login',
         method: 'POST',
         body: credentials,
       }),
     }),
     register: builder.mutation({
       query: credentials => ({
-        url: 'v1/identity/users',
+        url: 'auth/register',
         method: 'POST',
         body: credentials,
       }),

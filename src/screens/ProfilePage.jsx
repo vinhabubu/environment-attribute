@@ -1,21 +1,23 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+} from 'react-native';
 
 const ProfilePage = () => {
+  const navigation = useNavigation();
   return (
     <ScrollView style={styles.container}>
       {/* Profile Header */}
-      <View style={styles.header}>
+      <View
+        style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 0}]}>
         <Text style={styles.headerTitle}>Profile</Text>
-        <View style={styles.icons}>
-          <TouchableOpacity>
-            {/* Replace with icons */}
-            <Text style={styles.icon}>❤️</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.icon}>🛒</Text>
-          </TouchableOpacity>
-        </View>
       </View>
 
       {/* Profile Information */}
@@ -26,14 +28,15 @@ const ProfilePage = () => {
         </View>
         <View style={styles.userInfo}>
           <Text style={styles.userName}>Tradly Team</Text>
-          <Text style={styles.userPhone}>+1 9998887776</Text>
           <Text style={styles.userEmail}>info@tradly.co</Text>
         </View>
       </View>
 
       {/* Profile Actions */}
       <View style={styles.profileActions}>
-        <TouchableOpacity style={styles.actionItem}>
+        <TouchableOpacity
+          style={styles.actionItem}
+          onPress={() => navigation.navigate('EditProfilePage')}>
           <Text style={styles.actionText}>Edit Profile</Text>
         </TouchableOpacity>
 
@@ -98,7 +101,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#4CA394',
   },
   userPhone: {
     fontSize: 16,
@@ -119,16 +122,17 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
   },
   actionText: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#4CA394',
   },
   logout: {
     padding: 15,
   },
   logoutText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#e74c3c',
     fontWeight: 'bold',
-    textAlign: 'center',
+    // textAlign: 'center',
   },
 });

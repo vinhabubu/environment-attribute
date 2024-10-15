@@ -11,6 +11,7 @@
     "format": "prettier --write \"**/*.{tsx,jsx,js,css,ts}\""
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-picker/picker": "^2.8.1",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
@@ -27,6 +28,7 @@
     "react-native-select-dropdown": "^4.0.1",
     "react-native-star-rating-widget": "^1.9.1",
     "react-native-svg": "^15.7.1",
+    "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
     "react-navigation": "^5.0.0",
     "react-redux": "^9.1.2"

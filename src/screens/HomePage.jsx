@@ -8,6 +8,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import StarRating from 'react-native-star-rating-widget';
@@ -55,154 +56,153 @@ const HomePage = () => {
       } else if (response.errorCode) {
         console.log('Error: ', response.errorMessage);
       } else {
-        setImages( response.assets[0].uri);
+        setImages(response.assets[0].uri);
       }
     });
   };
 
   return (
     <View style={styles.container}>
-<ScrollView style={{flex:1}} showsVerticalScrollIndicator={false}>
-      <SafeAreaView>
-        {/* Building Dropdown */}
-        <Text style={styles.label}>Select Building:</Text>
-        <SelectDropdown
-          data={buildings}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-          }}
-          renderButton={(selectedItem, isOpened) => {
-            return (
-              <View style={styles.dropdownButtonStyle}>
-                <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.title) || 'Select buildings'}
-                </Text>
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View
-                style={{
-                  ...styles.dropdownItemStyle,
-                  ...(isSelected && {backgroundColor: '#D2D9DF'}),
-                }}>
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
-        />
-        {/* Floor Dropdown */}
-        <Text style={styles.label}>Select Floor:</Text>
-        <SelectDropdown
-          data={floors}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-          }}
-          renderButton={(selectedItem, isOpened) => {
-            return (
-              <View style={styles.dropdownButtonStyle}>
-                <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.title) || 'Select floors'}
-                </Text>
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View
-                style={{
-                  ...styles.dropdownItemStyle,
-                  ...(isSelected && {backgroundColor: '#D2D9DF'}),
-                }}>
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
-        />
+      <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+        <View
+          style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 0}]}>
+          <Text style={styles.headerTitle}>Home</Text>
+        </View>
+        <View style={styles.marginView}>
+          {/* Building Dropdown */}
+          <Text style={styles.label}>Select Building:</Text>
+          <SelectDropdown
+            data={buildings}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  <Text style={styles.dropdownButtonTxtStyle}>
+                    {(selectedItem && selectedItem.title) || 'Select buildings'}
+                  </Text>
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View
+                  style={{
+                    ...styles.dropdownItemStyle,
+                    ...(isSelected && {backgroundColor: '#D2D9DF'}),
+                  }}>
+                  <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
+          {/* Floor Dropdown */}
+          <Text style={styles.label}>Select Floor:</Text>
+          <SelectDropdown
+            data={floors}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  <Text style={styles.dropdownButtonTxtStyle}>
+                    {(selectedItem && selectedItem.title) || 'Select floors'}
+                  </Text>
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View
+                  style={{
+                    ...styles.dropdownItemStyle,
+                    ...(isSelected && {backgroundColor: '#D2D9DF'}),
+                  }}>
+                  <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
 
-        {/* Review Items Dropdown */}
-        <Text style={styles.label}>Select Review Item:</Text>
-        <SelectDropdown
-          data={reviewItems}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-          }}
-          renderButton={(selectedItem, isOpened) => {
-            return (
-              <View style={styles.dropdownButtonStyle}>
-                <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.title) || 'Select items'}
-                </Text>
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View
-                style={{
-                  ...styles.dropdownItemStyle,
-                  ...(isSelected && {backgroundColor: '#D2D9DF'}),
-                }}>
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
-        />
+          {/* Review Items Dropdown */}
+          <Text style={styles.label}>Select Review Item:</Text>
+          <SelectDropdown
+            data={reviewItems}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  <Text style={styles.dropdownButtonTxtStyle}>
+                    {(selectedItem && selectedItem.title) || 'Select items'}
+                  </Text>
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View
+                  style={{
+                    ...styles.dropdownItemStyle,
+                    ...(isSelected && {backgroundColor: '#D2D9DF'}),
+                  }}>
+                  <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
 
-        <Text style={styles.label}>Attribute (1-5 star)</Text>
-        <StarRating rating={rating} onChange={setRating} maxStars={5} />
+          <Text style={styles.label}>Attribute (1-5 star)</Text>
+          <StarRating rating={rating} onChange={setRating} maxStars={5} />
 
-        {/* Comment Section */}
-        <Text style={styles.label}>Comment:</Text>
-        <TextInput
-          style={styles.commentInput}
-          placeholder="Add your comment"
-          multiline
-          value={comment}
-          onChangeText={text => setComment(text)}
-        />
+          {/* Comment Section */}
+          <Text style={styles.labelComment}>Comment:</Text>
+          <TextInput
+            style={styles.commentInput}
+            placeholder="Add your comment"
+            multiline
+            value={comment}
+            onChangeText={text => setComment(text)}
+          />
 
-        {/* <Button title="Chọn Ảnh" onPress={pickImage} /> */}
-
+          {/* <Button title="Chọn Ảnh" onPress={pickImage} /> */}
 
           <TouchableOpacity onPress={pickImage} style={styles.pickImage}>
             <Text style={styles.uploadButtonText}>Upload Images</Text>
+          </TouchableOpacity>
+          {images !== '' && (
+            <Image source={{uri: images}} style={styles.image} />
+          )}
 
-        </TouchableOpacity>
-        {
-          images !== '' && (
-          <Image source={{ uri: images }} style={styles.image} />
-          )
-        }
-
-
-        {/* Submit Button */}
-        <Button
-          title="Submit Review"
-          onPress={() =>
-            console.log(
-              'Submit',
-              selectedBuilding,
-              selectedFloor,
-              selectedItems,
-              rating,
-              comment,
-            )
-          }
+          {/* Submit Button */}
+          <Button
+            title="Submit Review"
+            onPress={() =>
+              console.log(
+                'Submit',
+                selectedBuilding,
+                selectedFloor,
+                selectedItems,
+                rating,
+                comment,
+              )
+            }
             style={{backgroundColor: '#4CA394'}}
-        />
+          />
           {/* <TouchableOpacity>
             <Text>Submit</Text>
           </TouchableOpacity> */}
-        </SafeAreaView>
-        </ScrollView>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -210,7 +210,7 @@ const HomePage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    // padding: 20,
     backgroundColor: '#fff',
   },
   label: {
@@ -307,6 +307,29 @@ const styles = StyleSheet.create({
     height: 100,
     marginRight: 10,
     marginBottom: 10,
+  },
+  header: {
+    backgroundColor: '#367e7f',
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 24,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  marginView: {
+    paddingHorizontal: 20,
+    marginTop: 24,
+  },
+  labelComment: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    color: '#4CA394',
+    marginTop: 12,
   },
 });
 

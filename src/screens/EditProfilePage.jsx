@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,20 +11,70 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
+import { useUpdateUserMutation } from '../redux/reducer/RestfulApi';
+import Toast from 'react-native-toast-message';
+import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const EditProfilePage = () => {
   // State to manage input fields
-  const [username, setUsername] = useState('yANCHUI');
-  const [email, setEmail] = useState('yanchui@gmail.com');
-  const [phone, setPhone] = useState('+14987889999');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('ovFTbyVVCd');
   const navigation = useNavigation();
+  const [updateUser, dataUpdateUser] = useUpdateUserMutation();
+  const dataUser = useSelector(state => state?.issue?.dataUser);
+
 
   // Handler for updating profile
   const handleUpdate = () => {
-    console.log('Profile updated!');
-    // Add your update logic here (API calls, etc.)
+    if (username === '' || email === '' || password === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid username or password, email',
+      });
+      return false;
+    }
+    updateUser({
+      token: dataUser?.token,
+      id: dataUser?.user?.id,
+      body: {
+        username: username,
+        email: email,
+        password: password,
+      },
+    });
   };
+
+  useEffect(() => {
+    if (dataUpdateUser?.data) {
+      Toast.show({
+        type:'success',
+        text1: 'Update successful',
+      });
+      const dataUsers = {
+        user: dataUpdateUser?.data,
+        token: dataUser?.user?.token,
+      };
+      const dataString = JSON.stringify(dataUsers);
+      AsyncStorage.setItem('dataUser', dataString);
+
+      navigation.goBack();
+    }
+  }, [dataUpdateUser]);
+
+  useEffect(() => {
+    if (dataUpdateUser?.error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Update failed. Try again',
+      });
+    }
+
+  },[dataUpdateUser]);
+
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -35,7 +86,11 @@ const EditProfilePage = () => {
           style={styles.shareIcon}
           onPress={() => navigation.goBack()}>
           {/* Placeholder for share icon */}
-          <Text style={styles.shareText}>🔗</Text>
+          <Icon
+              name="back"
+              size={30}
+              color={'#FFFFFF'}
+            />
         </TouchableOpacity>
       </View>
 
@@ -62,16 +117,16 @@ const EditProfilePage = () => {
           style={styles.input}
           value={email}
           onChangeText={setEmail}
-          placeholder="Email I’d"
+          placeholder="Email"
           keyboardType="email-address"
         />
-        <TextInput
+        {/* <TextInput
           style={styles.input}
           value={phone}
           onChangeText={setPhone}
           placeholder="Phone Number"
           keyboardType="phone-pad"
-        />
+        /> */}
         <TextInput
           style={styles.input}
           value={password}

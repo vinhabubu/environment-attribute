@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -15,6 +16,14 @@ import StarRating from 'react-native-star-rating-widget';
 import {launchImageLibrary} from 'react-native-image-picker';
 import SelectDropdown from 'react-native-select-dropdown';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Icons from 'react-native-vector-icons/AntDesign';
+import {
+  useCreateAttributeMutation,
+  useGetBuildingMutation,
+} from '../redux/reducer/RestfulApi';
+import {useSelector} from 'react-redux';
+import {tokens} from 'react-native-paper/lib/typescript/styles/themes/v3/tokens';
+import Toast from 'react-native-toast-message';
 
 const HomePage = () => {
   const [selectedBuilding, setSelectedBuilding] = useState('');
@@ -23,17 +32,11 @@ const HomePage = () => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [images, setImages] = useState('');
+  const [getBuilding, dataBuildings] = useGetBuildingMutation();
+  const dataUser = useSelector(state => state?.issue?.dataUser);
+  const [floorBuildings, setFloorBuilding] = useState([]);
+  const [createAttribute, dataCreateAttribute] = useCreateAttributeMutation();
 
-  const buildings = [
-    {title: 'Building A'},
-    {title: 'Building B'},
-    {title: 'Building C'},
-  ];
-  const floors = [
-    {title: '1st Floor'},
-    {title: '2nd Floor'},
-    {title: '3rd Floor'},
-  ];
   const reviewItems = [
     {title: 'Lights'},
     {title: 'Fans'},
@@ -43,6 +46,60 @@ const HomePage = () => {
     {title: 'Trash Cans'},
     {title: 'Walls'},
   ];
+
+  const generateFloors = num => {
+    return Array.from({length: num}, (v, i) => ({
+      title: `Floor ${i + 1}`,
+    }));
+  };
+
+  const handleGetBuilding = async () => {
+    await getBuilding({
+      token: dataUser?.token,
+    });
+  };
+
+  useEffect(() => {
+    if (selectedBuilding !== '') {
+      // console.log(selectedBuilding);
+      const buildings = dataBuildings?.data?.filter(item => item?._id === selectedBuilding);
+      if (buildings?.length > 0) {
+        const floors = generateFloors(buildings[0]?.amountFloor);
+      setFloorBuilding(floors);
+      }
+
+    }
+  }, [selectedBuilding]);
+
+  useEffect(() => {
+    if (dataUser?.token) {
+      handleGetBuilding();
+    }
+  }, [dataUser]);
+
+  useEffect(() => {
+    if (dataCreateAttribute?.data) {
+      Toast.show({
+        type: 'success',
+        text1: 'Attribute created successfully',
+      });
+      setRating(0);
+      setComment('');
+      setImages('');
+      setSelectedItems('');
+      setSelectedFloor('');
+      setSelectedBuilding('');
+    }
+  }, [dataCreateAttribute]);
+
+  useEffect(() => {
+    if (dataCreateAttribute?.error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to create attribute. Try again',
+      });
+    }
+  }, [dataCreateAttribute]);
 
   const pickImage = () => {
     const options = {
@@ -61,50 +118,140 @@ const HomePage = () => {
     });
   };
 
+  const uploadImage = async () => {
+    const url = 'https://freeimage.host/api/1/upload';
+    const formData = new FormData();
+
+    formData.append('key', '6d207e02198a847aa98d0a2a901485a5');
+    formData.append('action', 'upload');
+
+    // Assuming you have a file URI (in this case, from postman-cloud or local device)
+    const fileUri = images; // Change this to your actual file URI
+    const fileName = fileUri.split('/').pop();
+
+    // Append the file to FormData
+    formData.append('source', {
+      uri: fileUri,
+      type: 'image/jpeg', // Adjust the MIME type if necessary
+      name: fileName,
+    });
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Cookie: 'PHPSESSID=uo5paotm32hc0ksnff7lrhi9gm',
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      });
+
+      const jsonResponse = await response.json();
+      await createAttribute({
+        token: dataUser?.token,
+        body: {
+          buildingId: selectedBuilding,
+          floor: selectedFloor,
+          item: selectedItems,
+          image: jsonResponse?.image?.image?.url,
+          level: rating,
+          description: comment,
+          idUser: dataUser?.user?._id,
+        },
+      });
+      // console.log('Upload response:', jsonResponse);
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Upload image fail . Please try again',
+      });
+      console.error('Upload failed:', error);
+    }
+  };
+
+  const handlePushAttribute = async () => {
+    if (
+      selectedBuilding === '' ||
+      selectedFloor === '' ||
+      selectedItems === '' ||
+      rating === 0 ||
+      comment === ''
+    ) {
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid input. Please check again',
+      });
+      return false;
+    }
+    if (images === '') {
+      await createAttribute({
+        token: dataUser?.token,
+        body: {
+          buildingId: selectedBuilding,
+          floor: selectedFloor,
+          item: selectedItems,
+          level: rating,
+          description: comment,
+          idUser: dataUser?.user?._id,
+        },
+      });
+    } else {
+      uploadImage();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         <View
           style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 0}]}>
           <Text style={styles.headerTitle}>Home</Text>
+          <Icons name="qrcode" size={30} color={'#FFFFFF'} />
         </View>
         <View style={styles.marginView}>
           {/* Building Dropdown */}
           <Text style={styles.label}>Select Building:</Text>
-          <SelectDropdown
-            data={buildings}
-            onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
-            }}
-            renderButton={(selectedItem, isOpened) => {
-              return (
-                <View style={styles.dropdownButtonStyle}>
-                  <Text style={styles.dropdownButtonTxtStyle}>
-                    {(selectedItem && selectedItem.title) || 'Select buildings'}
-                  </Text>
-                </View>
-              );
-            }}
-            renderItem={(item, index, isSelected) => {
-              return (
-                <View
-                  style={{
-                    ...styles.dropdownItemStyle,
-                    ...(isSelected && {backgroundColor: '#D2D9DF'}),
-                  }}>
-                  <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-                </View>
-              );
-            }}
-            showsVerticalScrollIndicator={false}
-            dropdownStyle={styles.dropdownMenuStyle}
-          />
+          {dataBuildings?.data && (
+            <SelectDropdown
+              data={dataBuildings?.data}
+              onSelect={(selectedItem, index) => {
+                setSelectedBuilding(selectedItem?._id);
+              }}
+              renderButton={selectedItem => {
+                return (
+                  <View style={styles.dropdownButtonStyle}>
+                    <Text style={styles.dropdownButtonTxtStyle}>
+                      {(selectedItem && selectedItem?.name) ||
+                        'Select buildings'}
+                    </Text>
+                  </View>
+                );
+              }}
+              renderItem={(item, index, isSelected) => {
+
+                return (
+                  <View
+                    style={{
+                      ...styles.dropdownItemStyle,
+                      ...(isSelected && {backgroundColor: '#D2D9DF'}),
+                    }}>
+                    <Text style={styles.dropdownItemTxtStyle}>
+                      {item.name}
+                    </Text>
+                  </View>
+                );
+              }}
+              showsVerticalScrollIndicator={false}
+              dropdownStyle={styles.dropdownMenuStyle}
+            />
+          )}
+
           {/* Floor Dropdown */}
           <Text style={styles.label}>Select Floor:</Text>
           <SelectDropdown
-            data={floors}
+            data={floorBuildings}
             onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
+              setSelectedFloor(index + 1);
             }}
             renderButton={(selectedItem, isOpened) => {
               return (
@@ -135,7 +282,7 @@ const HomePage = () => {
           <SelectDropdown
             data={reviewItems}
             onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
+              setSelectedItems(selectedItem?.title);
             }}
             renderButton={(selectedItem, isOpened) => {
               return (

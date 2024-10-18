@@ -7,6 +7,7 @@ import Icons from 'react-native-vector-icons/FontAwesome5';
 import HomePage from '../screens/HomePage';
 import {defaultTheme} from '../theme/theme';
 import ProfilePage from '../screens/ProfilePage';
+import MyAttributePage from '../screens/MyAttributePage';
 
 const BottomBarNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -44,8 +45,8 @@ const BottomBarNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Course"
-        component={HomePage}
+        name="Attribute"
+        component={MyAttributePage}
         options={{
           tabBarLabel: 'Course',
           tabBarShowLabel: false,

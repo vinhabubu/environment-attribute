@@ -4,7 +4,7 @@ import {createSlice} from '@reduxjs/toolkit';
 // Part 2
 
 const initialState = {
-  userInfo: {
+  dataUser: {
     tokenUser: '',
     userId: '',
     phone: '',
@@ -17,7 +17,7 @@ export const issueSlice = createSlice({
   initialState,
   reducers: {
     addUserInfo: (state, action) => {
-      state.userInfo = action.payload;
+      state.dataUser = action.payload;
     },
   },
 });

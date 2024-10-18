@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {
@@ -9,9 +10,19 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
+import { useSelector } from 'react-redux';
+
+
 
 const ProfilePage = () => {
   const navigation = useNavigation();
+  const dataUser = useSelector(state => state?.issue?.dataUser);
+
+  const handleLogout = () => {
+    AsyncStorage.clear();
+    navigation.navigate('LoginPage');
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Profile Header */}
@@ -27,8 +38,8 @@ const ProfilePage = () => {
           <Text style={styles.avatarText}>T</Text>
         </View>
         <View style={styles.userInfo}>
-          <Text style={styles.userName}>Tradly Team</Text>
-          <Text style={styles.userEmail}>info@tradly.co</Text>
+          <Text style={styles.userName}>{dataUser?.user?.name}</Text>
+          <Text style={styles.userEmail}>{dataUser?.user?.email}</Text>
         </View>
       </View>
 
@@ -41,7 +52,7 @@ const ProfilePage = () => {
         </TouchableOpacity>
 
         {/* Logout Option */}
-        <TouchableOpacity style={styles.logout}>
+        <TouchableOpacity style={styles.logout} onPress={handleLogout}>
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </View>

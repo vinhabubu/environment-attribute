@@ -16,9 +16,10 @@ const SplashPage = () => {
     const handleNavigate = async () => {
       const valueUser = await AsyncStorage.getItem('dataUser');
       const dataUser = JSON.parse(valueUser);
+      dispatch(addUserInfo(dataUser));
       setTimeout(() => {
         if (dataUser?.token) {
-          dispatch(addUserInfo(dataUser));
+
           navigation.navigate('BottomTabNavigator');
         } else {
           navigation.navigate('LoginPage');
@@ -26,7 +27,7 @@ const SplashPage = () => {
       }, 3000);
     };
     handleNavigate();
-  }, [navigation]);
+  }, [dispatch, navigation]);
   return (
     <View style={styles.container}>
       <Image

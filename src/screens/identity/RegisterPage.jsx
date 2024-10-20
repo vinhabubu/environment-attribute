@@ -55,6 +55,7 @@ const RegisterScreen = ({navigation}) => {
         type: 'success',
         text1: 'Register successful',
       });
+      navigation.navigate('Login');
     }
   }, [dataRegister]);
 
@@ -64,6 +65,7 @@ const RegisterScreen = ({navigation}) => {
         type: 'error',
         text1: 'Register fail. Try again',
       });
+      console.log(dataRegister?.error);
     }
   }, [dataRegister?.error]);
 
@@ -73,15 +75,17 @@ const RegisterScreen = ({navigation}) => {
       <Text style={styles.subtitle}>Signup to your account</Text>
       <TextInput
         style={styles.input}
-        placeholder="User Name"
+        placeholder="Username"
         value={userName}
         onChangeText={setUserName}
+        placeholderTextColor={'#000000'}
       />
       <TextInput
         style={styles.input}
         placeholder="Email ID"
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor={'#000000'}
       />
       <TextInput
         style={styles.input}
@@ -89,6 +93,7 @@ const RegisterScreen = ({navigation}) => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry={true}
+        placeholderTextColor={'#000000'}
       />
       <TextInput
         style={styles.input}
@@ -96,6 +101,7 @@ const RegisterScreen = ({navigation}) => {
         value={rePassword}
         onChangeText={setRePassword}
         secureTextEntry={true}
+        placeholderTextColor={'#000000'}
       />
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
@@ -138,6 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 10,
     height: 52,
+    color: '#000000',
   },
   button: {
     backgroundColor: '#fff',

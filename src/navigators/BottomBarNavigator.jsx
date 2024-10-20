@@ -53,7 +53,7 @@ const BottomBarNavigator = () => {
 
           tabBarIcon: ({focused}) => (
             <Icons
-              name="book"
+              name="history"
               size={30}
               color={focused ? defaultTheme?.colors?.primaryOrange : '#FFFFFF'}
             />
@@ -68,8 +68,8 @@ const BottomBarNavigator = () => {
           tabBarShowLabel: false,
 
           tabBarIcon: ({focused}) => (
-            <Icon
-              name="school"
+            <IconName
+              name="user"
               size={30}
               color={focused ? defaultTheme?.colors?.primaryOrange : '#FFFFFF'}
             />

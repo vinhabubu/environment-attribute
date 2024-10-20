@@ -15,11 +15,11 @@ const SplashPage = () => {
   useEffect(() => {
     const handleNavigate = async () => {
       const valueUser = await AsyncStorage.getItem('dataUser');
+      console.log(valueUser);
       const dataUser = JSON.parse(valueUser);
       dispatch(addUserInfo(dataUser));
       setTimeout(() => {
         if (dataUser?.token) {
-
           navigation.navigate('BottomTabNavigator');
         } else {
           navigation.navigate('LoginPage');

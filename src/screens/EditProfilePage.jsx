@@ -11,20 +11,22 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { useUpdateUserMutation } from '../redux/reducer/RestfulApi';
+import {useUpdateUserMutation} from '../redux/reducer/RestfulApi';
 import Toast from 'react-native-toast-message';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { addUserInfo } from '../redux/reducer/IssueReducer';
 
 const EditProfilePage = () => {
   // State to manage input fields
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('ovFTbyVVCd');
+  const dataUser = useSelector(state => state?.issue?.dataUser);
+  const [username, setUsername] = useState(dataUser?.user?.username);
+  const [email, setEmail] = useState(dataUser?.user?.email);
+  const [password, setPassword] = useState('nguyenvinh');
   const navigation = useNavigation();
   const [updateUser, dataUpdateUser] = useUpdateUserMutation();
-  const dataUser = useSelector(state => state?.issue?.dataUser);
+  const dispatch = useDispatch();
 
 
   // Handler for updating profile
@@ -38,7 +40,7 @@ const EditProfilePage = () => {
     }
     updateUser({
       token: dataUser?.token,
-      id: dataUser?.user?.id,
+      id: dataUser?.user?._id,
       body: {
         username: username,
         email: email,
@@ -50,14 +52,16 @@ const EditProfilePage = () => {
   useEffect(() => {
     if (dataUpdateUser?.data) {
       Toast.show({
-        type:'success',
+        type: 'success',
         text1: 'Update successful',
       });
       const dataUsers = {
-        user: dataUpdateUser?.data,
-        token: dataUser?.user?.token,
+        user: dataUpdateUser?.data?.user,
+        token: dataUser?.token,
       };
+
       const dataString = JSON.stringify(dataUsers);
+      dispatch(addUserInfo(dataUsers));
       AsyncStorage.setItem('dataUser', dataString);
 
       navigation.goBack();
@@ -66,31 +70,25 @@ const EditProfilePage = () => {
 
   useEffect(() => {
     if (dataUpdateUser?.error) {
+      console.log(dataUpdateUser?.error);
       Toast.show({
         type: 'error',
         text1: 'Update failed. Try again',
       });
     }
-
-  },[dataUpdateUser]);
-
-
+  }, [dataUpdateUser]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
       <View
-        style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 0}]}>
+        style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 20}]}>
         <Text style={styles.headerTitle}>Edit Profile</Text>
         <TouchableOpacity
           style={styles.shareIcon}
           onPress={() => navigation.goBack()}>
           {/* Placeholder for share icon */}
-          <Icon
-              name="back"
-              size={30}
-              color={'#FFFFFF'}
-            />
+          <Icon name="back" size={30} color={'#FFFFFF'} />
         </TouchableOpacity>
       </View>
 
@@ -107,19 +105,29 @@ const EditProfilePage = () => {
 
       {/* Edit Fields */}
       <View style={styles.form}>
+        <View>
+          <Text style={styles.titleText}>Username</Text>
         <TextInput
           style={styles.input}
-          value={username}
+          // value={username}
           onChangeText={setUsername}
-          placeholder="Username"
+            // placeholder="Username"
+            defaultValue={dataUser?.user?.username}
         />
+        </View>
+
+        <View>
+          <Text style={styles.titleText}>Email</Text>
         <TextInput
           style={styles.input}
-          value={email}
+          // value={email}
           onChangeText={setEmail}
-          placeholder="Email"
-          keyboardType="email-address"
-        />
+          // placeholder="Email"
+            keyboardType="email-address"
+            defaultValue={dataUser?.user?.email}
+
+          />
+            </View>
         {/* <TextInput
           style={styles.input}
           value={phone}
@@ -127,6 +135,8 @@ const EditProfilePage = () => {
           placeholder="Phone Number"
           keyboardType="phone-pad"
         /> */}
+        <View>
+        <Text style={styles.titleText}>Password</Text>
         <TextInput
           style={styles.input}
           value={password}
@@ -134,7 +144,7 @@ const EditProfilePage = () => {
           placeholder="Password"
           secureTextEntry
         />
-
+        </View>
         {/* Update Button */}
         <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
           <Text style={styles.updateButtonText}>Update</Text>
@@ -201,6 +211,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 15,
     paddingHorizontal: 10,
+    color: '#000',
   },
   updateButton: {
     backgroundColor: '#4CA394',
@@ -213,5 +224,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  titleText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4CA394',
   },
 });

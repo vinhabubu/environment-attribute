@@ -68,9 +68,10 @@ const LoginScreen = ({navigation}) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Username"
+        placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor={'#000000'}
       />
       <TextInput
         style={styles.input}
@@ -78,6 +79,7 @@ const LoginScreen = ({navigation}) => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry={true}
+        placeholderTextColor={'#000000'}
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 10,
     height: 52,
+    color: '#000000',
   },
   button: {
     backgroundColor: '#fff',

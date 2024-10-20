@@ -21,9 +21,11 @@ import {
   useCreateAttributeMutation,
   useGetBuildingMutation,
 } from '../redux/reducer/RestfulApi';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {tokens} from 'react-native-paper/lib/typescript/styles/themes/v3/tokens';
 import Toast from 'react-native-toast-message';
+import {useNavigation} from '@react-navigation/native';
+import { addAttribute } from '../redux/reducer/IssueReducer';
 
 const HomePage = () => {
   const [selectedBuilding, setSelectedBuilding] = useState('');
@@ -36,6 +38,14 @@ const HomePage = () => {
   const dataUser = useSelector(state => state?.issue?.dataUser);
   const [floorBuildings, setFloorBuilding] = useState([]);
   const [createAttribute, dataCreateAttribute] = useCreateAttributeMutation();
+  const [nameBuilding, setNameBuilding] = useState('');
+  const navigation = useNavigation();
+  const qrText = useSelector(state => state?.issue?.qrText);
+  const [defaultBuilding, setDefaultBuilding] = useState({});
+  const dispatch = useDispatch();
+  const isAddAttribute = useSelector(state => state?.issue?.isAddAttribute);
+
+
 
   const reviewItems = [
     {title: 'Lights'},
@@ -60,14 +70,35 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    if (qrText !== '' && dataBuildings?.data) {
+      const buildings = dataBuildings?.data?.filter(
+        item => item?.idQr === qrText,
+      );
+      if (buildings?.length > 0) {
+        setDefaultBuilding(buildings[0]);
+        // console.log(buildings[0]?._id);
+        setSelectedBuilding(buildings[0]?._id);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Building not found',
+        });
+      }
+    }
+
+  },[qrText, dataBuildings]);
+
+  useEffect(() => {
     if (selectedBuilding !== '') {
       // console.log(selectedBuilding);
-      const buildings = dataBuildings?.data?.filter(item => item?._id === selectedBuilding);
+      const buildings = dataBuildings?.data?.filter(
+        item => item?._id === selectedBuilding,
+      );
       if (buildings?.length > 0) {
+        setNameBuilding(buildings[0]?.name);
         const floors = generateFloors(buildings[0]?.amountFloor);
-      setFloorBuilding(floors);
+        setFloorBuilding(floors);
       }
-
     }
   }, [selectedBuilding]);
 
@@ -83,12 +114,11 @@ const HomePage = () => {
         type: 'success',
         text1: 'Attribute created successfully',
       });
+      dispatch(addAttribute(!isAddAttribute));
+
       setRating(0);
       setComment('');
       setImages('');
-      setSelectedItems('');
-      setSelectedFloor('');
-      setSelectedBuilding('');
     }
   }, [dataCreateAttribute]);
 
@@ -150,6 +180,7 @@ const HomePage = () => {
       await createAttribute({
         token: dataUser?.token,
         body: {
+          name: nameBuilding,
           buildingId: selectedBuilding,
           floor: selectedFloor,
           item: selectedItems,
@@ -175,7 +206,8 @@ const HomePage = () => {
       selectedFloor === '' ||
       selectedItems === '' ||
       rating === 0 ||
-      comment === ''
+      comment === '' ||
+      nameBuilding === ''
     ) {
       Toast.show({
         type: 'error',
@@ -183,10 +215,19 @@ const HomePage = () => {
       });
       return false;
     }
+
+    if (dataCreateAttribute?.isLoading) {
+      Toast.show({
+        type: 'error',
+        text1: 'Creating attribute is in progress. Please wait',
+      });
+      return false;
+    }
     if (images === '') {
       await createAttribute({
         token: dataUser?.token,
         body: {
+          name: nameBuilding,
           buildingId: selectedBuilding,
           floor: selectedFloor,
           item: selectedItems,
@@ -200,13 +241,19 @@ const HomePage = () => {
     }
   };
 
+  const handleScanPage = () => {
+    navigation.navigate('QrScanPage');
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         <View
-          style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 0}]}>
+          style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 20}]}>
           <Text style={styles.headerTitle}>Home</Text>
-          <Icons name="qrcode" size={30} color={'#FFFFFF'} />
+          <TouchableOpacity onPress={handleScanPage}>
+            <Icons name="qrcode" size={30} color={'#FFFFFF'} />
+          </TouchableOpacity>
         </View>
         <View style={styles.marginView}>
           {/* Building Dropdown */}
@@ -214,6 +261,7 @@ const HomePage = () => {
           {dataBuildings?.data && (
             <SelectDropdown
               data={dataBuildings?.data}
+              defaultValue={defaultBuilding}
               onSelect={(selectedItem, index) => {
                 setSelectedBuilding(selectedItem?._id);
               }}
@@ -228,16 +276,13 @@ const HomePage = () => {
                 );
               }}
               renderItem={(item, index, isSelected) => {
-
                 return (
                   <View
                     style={{
                       ...styles.dropdownItemStyle,
                       ...(isSelected && {backgroundColor: '#D2D9DF'}),
                     }}>
-                    <Text style={styles.dropdownItemTxtStyle}>
-                      {item.name}
-                    </Text>
+                    <Text style={styles.dropdownItemTxtStyle}>{item.name}</Text>
                   </View>
                 );
               }}
@@ -331,23 +376,13 @@ const HomePage = () => {
           )}
 
           {/* Submit Button */}
-          <Button
-            title="Submit Review"
-            onPress={() =>
-              console.log(
-                'Submit',
-                selectedBuilding,
-                selectedFloor,
-                selectedItems,
-                rating,
-                comment,
-              )
-            }
-            style={{backgroundColor: '#4CA394'}}
-          />
-          {/* <TouchableOpacity>
-            <Text>Submit</Text>
-          </TouchableOpacity> */}
+          <View style={{alignItems: 'center'}}>
+            <TouchableOpacity
+              style={[styles.buttonSubmit,{backgroundColor: dataCreateAttribute?.isLoading ? '#505050' : '#4CA394'}]}
+              onPress={handlePushAttribute}>
+              <Text style={styles.textButton}>Submit</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -387,6 +422,7 @@ const styles = StyleSheet.create({
     padding: 10,
     height: 100,
     marginBottom: 20,
+    color: '#000000',
   },
   dropdownButtonStyle: {
     width: 250,
@@ -477,6 +513,18 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     color: '#4CA394',
     marginTop: 12,
+  },
+  buttonSubmit: {
+    padding: 4,
+    marginVertical: 18,
+    borderRadius: 8,
+  },
+  textButton: {
+    fontWeight: '700',
+    fontSize: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    color: '#FFFFFF',
   },
 });
 

@@ -5,7 +5,7 @@ import {createApi} from '@reduxjs/toolkit/query/react';
 
 export const RestApi = createApi({
   reducerPath: 'RestApi',
-  baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000/api/'}),
+  baseQuery: fetchBaseQuery({baseUrl: 'http://192.199.20.101:5000/api/'}),
   endpoints: builder => ({
     login: builder.mutation({
       query: credentials => ({
@@ -53,9 +53,9 @@ export const RestApi = createApi({
         },
       }),
     }),
-    getAttributeById: builder.mutation({
+    getAttributeByUser: builder.mutation({
       query: credentials => ({
-        url: `assessment/${credentials?.id}`,
+        url: `assessment/user/${credentials?.id}`,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -72,5 +72,5 @@ export const {
   useGetBuildingMutation,
   useCreateAttributeMutation,
   useUpdateUserMutation,
-  useGetAttributeByIdMutation,
+  useGetAttributeByUserMutation,
 } = RestApi;

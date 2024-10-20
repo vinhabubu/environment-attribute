@@ -6,6 +6,7 @@ import LoginScreen from '../screens/identity/LoginPage';
 import RegisterScreen from '../screens/identity/RegisterPage';
 import SplashPage from '../screens/SplashPage';
 import EditProfilePage from '../screens/EditProfilePage';
+import QrScanPage from '../screens/QrScanPage';
 
 const StackNavigator = createStackNavigator();
 const screenOptions = {headerShown: false};
@@ -27,6 +28,7 @@ const RootNavigator = () => {
         name="BottomTabNavigator"
         component={BottomBarNavigator}
       />
+      <StackNavigator.Screen name="QrScanPage" component={QrScanPage} />
     </StackNavigator.Navigator>
   );
 };

@@ -10,9 +10,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { useSelector } from 'react-redux';
-
-
+import {useSelector} from 'react-redux';
 
 const ProfilePage = () => {
   const navigation = useNavigation();
@@ -27,7 +25,7 @@ const ProfilePage = () => {
     <ScrollView style={styles.container}>
       {/* Profile Header */}
       <View
-        style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 0}]}>
+        style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 20}]}>
         <Text style={styles.headerTitle}>Profile</Text>
       </View>
 
@@ -38,7 +36,7 @@ const ProfilePage = () => {
           <Text style={styles.avatarText}>T</Text>
         </View>
         <View style={styles.userInfo}>
-          <Text style={styles.userName}>{dataUser?.user?.name}</Text>
+          <Text style={styles.userName}>{dataUser?.user?.username}</Text>
           <Text style={styles.userEmail}>{dataUser?.user?.email}</Text>
         </View>
       </View>

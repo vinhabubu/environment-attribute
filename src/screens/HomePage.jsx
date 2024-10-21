@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -25,7 +25,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {tokens} from 'react-native-paper/lib/typescript/styles/themes/v3/tokens';
 import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
-import { addAttribute } from '../redux/reducer/IssueReducer';
+import {addAttribute} from '../redux/reducer/IssueReducer';
+import { resetCache } from '../../metro.config';
 
 const HomePage = () => {
   const [selectedBuilding, setSelectedBuilding] = useState('');
@@ -44,8 +45,7 @@ const HomePage = () => {
   const [defaultBuilding, setDefaultBuilding] = useState({});
   const dispatch = useDispatch();
   const isAddAttribute = useSelector(state => state?.issue?.isAddAttribute);
-
-
+  const dropdownRef = useRef(null);
 
   const reviewItems = [
     {title: 'Lights'},
@@ -75,6 +75,9 @@ const HomePage = () => {
         item => item?.idQr === qrText,
       );
       if (buildings?.length > 0) {
+
+
+
         setDefaultBuilding(buildings[0]);
         // console.log(buildings[0]?._id);
         setSelectedBuilding(buildings[0]?._id);
@@ -85,8 +88,7 @@ const HomePage = () => {
         });
       }
     }
-
-  },[qrText, dataBuildings]);
+  }, [qrText, dataBuildings]);
 
   useEffect(() => {
     if (selectedBuilding !== '') {
@@ -249,7 +251,10 @@ const HomePage = () => {
     <View style={styles.container}>
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         <View
-          style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 20}]}>
+          style={[
+            styles.header,
+            {paddingTop: Platform.OS === 'ios' ? 50 : 20},
+          ]}>
           <Text style={styles.headerTitle}>Home</Text>
           <TouchableOpacity onPress={handleScanPage}>
             <Icons name="qrcode" size={30} color={'#FFFFFF'} />
@@ -265,6 +270,7 @@ const HomePage = () => {
               onSelect={(selectedItem, index) => {
                 setSelectedBuilding(selectedItem?._id);
               }}
+              ref={dropdownRef}
               renderButton={selectedItem => {
                 return (
                   <View style={styles.dropdownButtonStyle}>
@@ -378,7 +384,14 @@ const HomePage = () => {
           {/* Submit Button */}
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity
-              style={[styles.buttonSubmit,{backgroundColor: dataCreateAttribute?.isLoading ? '#505050' : '#4CA394'}]}
+              style={[
+                styles.buttonSubmit,
+                {
+                  backgroundColor: dataCreateAttribute?.isLoading
+                    ? '#505050'
+                    : '#4CA394',
+                },
+              ]}
               onPress={handlePushAttribute}>
               <Text style={styles.textButton}>Submit</Text>
             </TouchableOpacity>

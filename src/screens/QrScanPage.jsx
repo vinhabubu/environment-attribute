@@ -14,8 +14,8 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { addQrText } from '../redux/reducer/IssueReducer';
+import {useDispatch} from 'react-redux';
+import {addQrText} from '../redux/reducer/IssueReducer';
 
 const QrScanPage = () => {
   const navigation = useNavigation();
@@ -30,7 +30,7 @@ const QrScanPage = () => {
     dispatch(addQrText(e?.data));
     setTimeout(() => {
       navigation.goBack();
-    },500);
+    }, 500);
   };
 
   const handleBack = () => {

@@ -16,7 +16,7 @@ import Toast from 'react-native-toast-message';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { addUserInfo } from '../redux/reducer/IssueReducer';
+import {addUserInfo} from '../redux/reducer/IssueReducer';
 
 const EditProfilePage = () => {
   // State to manage input fields
@@ -27,7 +27,6 @@ const EditProfilePage = () => {
   const navigation = useNavigation();
   const [updateUser, dataUpdateUser] = useUpdateUserMutation();
   const dispatch = useDispatch();
-
 
   // Handler for updating profile
   const handleUpdate = () => {
@@ -107,27 +106,26 @@ const EditProfilePage = () => {
       <View style={styles.form}>
         <View>
           <Text style={styles.titleText}>Username</Text>
-        <TextInput
-          style={styles.input}
-          // value={username}
-          onChangeText={setUsername}
+          <TextInput
+            style={styles.input}
+            // value={username}
+            onChangeText={setUsername}
             // placeholder="Username"
             defaultValue={dataUser?.user?.username}
-        />
+          />
         </View>
 
         <View>
           <Text style={styles.titleText}>Email</Text>
-        <TextInput
-          style={styles.input}
-          // value={email}
-          onChangeText={setEmail}
-          // placeholder="Email"
+          <TextInput
+            style={styles.input}
+            // value={email}
+            onChangeText={setEmail}
+            // placeholder="Email"
             keyboardType="email-address"
             defaultValue={dataUser?.user?.email}
-
           />
-            </View>
+        </View>
         {/* <TextInput
           style={styles.input}
           value={phone}
@@ -136,14 +134,14 @@ const EditProfilePage = () => {
           keyboardType="phone-pad"
         /> */}
         <View>
-        <Text style={styles.titleText}>Password</Text>
-        <TextInput
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Password"
-          secureTextEntry
-        />
+          <Text style={styles.titleText}>Password</Text>
+          <TextInput
+            style={styles.input}
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Password"
+            secureTextEntry
+          />
         </View>
         {/* Update Button */}
         <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>

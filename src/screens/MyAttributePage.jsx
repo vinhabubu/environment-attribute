@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   flat: {
-    paddingBottom:80,
+    paddingBottom: 80,
     paddingHorizontal: 20,
     backgroundColor: '#fff',
   },

@@ -8,9 +8,15 @@ import HomePage from '../screens/HomePage';
 import {defaultTheme} from '../theme/theme';
 import ProfilePage from '../screens/ProfilePage';
 import MyAttributePage from '../screens/MyAttributePage';
+import {useSelector} from 'react-redux';
+import AddBuildingPage from '../screens/admin/AddBuildingPage';
+import ListUserPage from '../screens/admin/ListUserPage';
 
 const BottomBarNavigator = () => {
   const Tab = createBottomTabNavigator();
+  const dataUser = useSelector(state => state?.issue?.dataUser);
+  const roleUser = dataUser?.user?.roleId;
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -31,7 +37,7 @@ const BottomBarNavigator = () => {
       }}>
       <Tab.Screen
         name="Home"
-        component={HomePage}
+        component={roleUser === 0 ? HomePage : AddBuildingPage}
         options={{
           tabBarLabel: 'Home',
           tabBarShowLabel: false,
@@ -61,8 +67,25 @@ const BottomBarNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="School"
-        component={ProfilePage}
+        name="Profile"
+        component={ListUserPage}
+        options={{
+          tabBarLabel: 'School',
+          tabBarShowLabel: false,
+
+          tabBarIcon: ({focused}) => (
+            <IconName
+              name="users"
+              size={30}
+              color={focused ? defaultTheme?.colors?.primaryOrange : '#FFFFFF'}
+            />
+          ),
+        }}
+      />
+      {
+        roleUser === 1 && <Tab.Screen
+        name="Profile"
+        component={  ProfilePage }
         options={{
           tabBarLabel: 'School',
           tabBarShowLabel: false,
@@ -76,6 +99,7 @@ const BottomBarNavigator = () => {
           ),
         }}
       />
+      }
     </Tab.Navigator>
   );
 };

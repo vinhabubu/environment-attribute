@@ -10,7 +10,7 @@ const initialState = {
     phone: '',
   },
   qrText: '',
-  isAddAttribute : false,
+  isAddAttribute: false,
 };
 
 // Part 3
@@ -31,5 +31,5 @@ export const issueSlice = createSlice({
 });
 
 // Part 4
-export const {addUserInfo, addQrText,addAttribute} = issueSlice.actions;
+export const {addUserInfo, addQrText, addAttribute} = issueSlice.actions;
 export default issueSlice.reducer;

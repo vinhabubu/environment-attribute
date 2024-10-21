@@ -7,6 +7,7 @@ import RegisterScreen from '../screens/identity/RegisterPage';
 import SplashPage from '../screens/SplashPage';
 import EditProfilePage from '../screens/EditProfilePage';
 import QrScanPage from '../screens/QrScanPage';
+import AddBuilding from '../screens/admin/AddPage';
 
 const StackNavigator = createStackNavigator();
 const screenOptions = {headerShown: false};
@@ -29,6 +30,7 @@ const RootNavigator = () => {
         component={BottomBarNavigator}
       />
       <StackNavigator.Screen name="QrScanPage" component={QrScanPage} />
+      <StackNavigator.Screen name="AddBuildingPage" component={AddBuilding} />
     </StackNavigator.Navigator>
   );
 };

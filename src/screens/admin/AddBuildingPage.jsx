@@ -1,31 +1,38 @@
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import {FlatList, Text, View, StyleSheet, Platform, TouchableOpacity} from 'react-native';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {
+  FlatList,
+  Text,
+  View,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
+import {useGetBuildingMutation} from '../../redux/reducer/RestfulApi';
+import {useSelector} from 'react-redux';
 
 const AddBuildingPage = () => {
-    const navigation = useNavigation();
-  // Sample data array
-  const buildings = [
-    {
-      name: 'Building Hoa Phat 9',
-      amountFloor: 4,
-      idQr: '123',
-    },
-    {
-      name: 'Building Vinhomes Central',
-      amountFloor: 12,
-      idQr: '456',
-    },
-    {
-      name: 'Building Sun World',
-      amountFloor: 8,
-      idQr: '789',
-    },
-  ];
+  const navigation = useNavigation();
+  const [getBuilding, dataBuildings] = useGetBuildingMutation();
+  const dataUser = useSelector(state => state?.issue?.dataUser);
+  const isCreateBuilding = useSelector(state => state?.issue?.isCreateBuilding);
 
-    const handleAddBuilding = () => {
-        navigation.navigate('AddBuildingPage');
-    };
+  const handleGetBuilding = async () => {
+    await getBuilding({
+      token: dataUser?.token,
+    });
+  };
+
+  useEffect(() => {
+    if (dataUser?.token) {
+      handleGetBuilding();
+    }
+  }, [dataUser, isCreateBuilding]);
+
+  const handleAddBuilding = () => {
+    navigation.navigate('AddBuildingPage');
+  };
 
   // Render each item in the FlatList
   const renderItem = ({item}) => (
@@ -42,6 +49,13 @@ const AddBuildingPage = () => {
         <Text style={styles.detail}>Id Qr code: </Text>
         <Text style={styles.content}>{item.idQr}</Text>
       </View>
+      <View style={styles.viewButton}>
+        <TouchableOpacity
+          style={styles.buttonEdit}
+          onPress={() => navigation.navigate('EditBuildingPage', {item})}>
+          <Text style={styles.edit}>Edit</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -49,13 +63,15 @@ const AddBuildingPage = () => {
     <View style={styles.container}>
       <View
         style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 20}]}>
-              <Text style={styles.headerTitle}>Building</Text>
-              <TouchableOpacity style={styles.button} onPress={handleAddBuilding}>
-                  <Text style={styles.buttonText}>Add</Text>
-              </TouchableOpacity>
+        <Text style={styles.headerTitle}>Building</Text>
+        <TouchableOpacity style={styles.button} onPress={handleAddBuilding}>
+          <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
       </View>
       <FlatList
-        data={buildings} // Array of building data
+        showsVerticalScrollIndicator={false}
+        style={styles.flat}
+        data={dataBuildings?.data} // Array of building data
         renderItem={renderItem} // Function to render each item
         keyExtractor={item => item.idQr} // Unique key for each item
       />
@@ -120,18 +136,37 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
     color: 'gray',
-    },
-    buttonText: {
-        color: '#367e7f',
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
-    button: {
-        backgroundColor: '#fff',
-        paddingVertical: 4,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-    },
+  },
+  buttonText: {
+    color: '#367e7f',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#fff',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  viewButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    // marginTop: 8,
+  },
+  buttonEdit: {
+    backgroundColor: '#4CA394',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+  },
+  edit: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  flat: {
+    marginVertical: 16,
+  },
 });
 
 export default AddBuildingPage;

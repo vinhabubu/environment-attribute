@@ -26,7 +26,7 @@ import {tokens} from 'react-native-paper/lib/typescript/styles/themes/v3/tokens'
 import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
 import {addAttribute} from '../redux/reducer/IssueReducer';
-import { resetCache } from '../../metro.config';
+import {resetCache} from '../../metro.config';
 
 const HomePage = () => {
   const [selectedBuilding, setSelectedBuilding] = useState('');
@@ -75,9 +75,6 @@ const HomePage = () => {
         item => item?.idQr === qrText,
       );
       if (buildings?.length > 0) {
-
-
-
         setDefaultBuilding(buildings[0]);
         // console.log(buildings[0]?._id);
         setSelectedBuilding(buildings[0]?._id);
@@ -183,7 +180,7 @@ const HomePage = () => {
         token: dataUser?.token,
         body: {
           name: nameBuilding,
-          buildingId: selectedBuilding,
+          idBuilding: selectedBuilding,
           floor: selectedFloor,
           item: selectedItems,
           image: jsonResponse?.image?.image?.url,
@@ -230,7 +227,7 @@ const HomePage = () => {
         token: dataUser?.token,
         body: {
           name: nameBuilding,
-          buildingId: selectedBuilding,
+          idBuilding: selectedBuilding,
           floor: selectedFloor,
           item: selectedItems,
           level: rating,

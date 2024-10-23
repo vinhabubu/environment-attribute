@@ -11,6 +11,7 @@ const initialState = {
   },
   qrText: '',
   isAddAttribute: false,
+  isCreateBuilding: false,
 };
 
 // Part 3
@@ -27,9 +28,13 @@ export const issueSlice = createSlice({
     addAttribute: (state, action) => {
       state.isAddAttribute = action.payload;
     },
+    addIsCreateBuilding: (state, action) => {
+      state.isCreateBuilding = action.payload;
+    },
   },
 });
 
 // Part 4
-export const {addUserInfo, addQrText, addAttribute} = issueSlice.actions;
+export const {addUserInfo, addQrText, addAttribute, addIsCreateBuilding} =
+  issueSlice.actions;
 export default issueSlice.reducer;

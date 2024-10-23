@@ -31,6 +31,17 @@ export const RestApi = createApi({
         },
       }),
     }),
+    createBuilding: builder.mutation({
+      query: credentials => ({
+        url: 'buildings',
+        method: 'POST',
+        body: credentials?.body,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${credentials?.token}`,
+        },
+      }),
+    }),
     createAttribute: builder.mutation({
       query: credentials => ({
         url: 'assessment',
@@ -63,6 +74,37 @@ export const RestApi = createApi({
         },
       }),
     }),
+    updateBuilding: builder.mutation({
+      query: credentials => ({
+        url: `buildings/${credentials?.id}`,
+        method: 'PUT',
+        body: credentials?.body,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${credentials?.token}`,
+        },
+      }),
+    }),
+    getAllAttribute: builder.mutation({
+      query: credentials => ({
+        url: 'assessment',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${credentials?.token}`,
+        },
+      }),
+    }),
+    getAllUser: builder.mutation({
+      query: credentials => ({
+        url: 'users',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${credentials?.token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -73,4 +115,8 @@ export const {
   useCreateAttributeMutation,
   useUpdateUserMutation,
   useGetAttributeByUserMutation,
+  useCreateBuildingMutation,
+  useUpdateBuildingMutation,
+  useGetAllAttributeMutation,
+  useGetAllUserMutation,
 } = RestApi;

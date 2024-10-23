@@ -1,42 +1,54 @@
-import React from 'react';
-import { FlatList, Text, View, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {FlatList, Text, View, StyleSheet, Platform} from 'react-native';
+import { useGetAllUserMutation } from '../../redux/reducer/RestfulApi';
+import { useSelector } from 'react-redux';
+import { Searchbar } from 'react-native-paper';
 
 const ListUserPage = () => {
-  // Sample data array
-  const users = [
-    {
-      username: 'VinhNguyen',
-      email: 'nguyenvinh@gmail.com',
-      roleId: 1,
-    },
-    {
-      username: 'Alice',
-      email: 'alice@example.com',
-      roleId: 0,
-    },
-    {
-      username: 'Bob',
-      email: 'bob@example.com',
-      roleId: 0,
-    },
-  ];
+  const [getAllUser, dataAllUser] = useGetAllUserMutation();
+  const dataUser = useSelector(state => state?.issue?.dataUser);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
 
+  const onChangeSearch = query => {
+    setSearchQuery(query);
+    const filtered = dataAllUser?.data?.filter(user =>
+      user?.username?.toLowerCase().includes(query.toLowerCase()),
+    );
+    setFilteredData(filtered);
+  };
+
+  useEffect(() => {
+    if (dataAllUser?.data) {
+      setFilteredData(dataAllUser?.data);
+    }
+  }, [dataAllUser]);
+
+
+  useEffect(() => {
+    if (dataUser?.token) {
+      getAllUser({
+        token: dataUser?.token,
+      });
+    }
+  }, [dataUser]);
   // Render each item in the FlatList
-  const renderItem = ({ item }) => (
+  const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
-       <View style={styles.smallView}>
+      <View style={styles.smallView}>
         <Text style={styles.detail}>Username: </Text>
-        <Text style={styles.content}>{item.username}</Text>
+        <Text style={styles.content}>{item?.username}</Text>
       </View>
       <View style={styles.smallView}>
         <Text style={styles.detail}>Email: </Text>
-        <Text style={styles.content}>{item.username}</Text>
+        <Text style={styles.content}>{item?.email}</Text>
       </View>
       <View style={styles.smallView}>
         <Text style={styles.detail}>Role: </Text>
-        <Text style={styles.content}>{item.roleId === 0 ? 'user' : 'admin'}</Text>
+        <Text style={[styles.content]}>
+          {item?.roleId === 0 ? 'user' : 'admin'}
+        </Text>
       </View>
-
     </View>
   );
 
@@ -44,15 +56,22 @@ const ListUserPage = () => {
     <View style={styles.container}>
       <View
         style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 20}]}>
-              <Text style={styles.headerTitle}>List User</Text>
-
+        <Text style={styles.headerTitle}>List User</Text>
       </View>
-    <FlatList
-      data={users} // Array of user data
-      renderItem={renderItem} // Function to render each user
-      keyExtractor={(item) => item.email} // Use email as unique key
+      <Searchbar
+        placeholder="Search"
+        style={{marginVertical: 12 , marginHorizontal : 12, backgroundColor: '#fff',shadowColor: '#000',
+    shadowOpacity: 0.2,elevation: 2, color: '#000' }}
+
+    value={searchQuery}
+    onChangeText={onChangeSearch}
+    />
+      <FlatList
+        data={filteredData} // Array of user data
+        renderItem={renderItem} // Function to render each user
+        keyExtractor={item => item.email} // Use email as unique key
       />
-       </View>
+    </View>
   );
 };
 
@@ -113,18 +132,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
     color: 'gray',
-    },
-    buttonText: {
-        color: '#367e7f',
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
-    button: {
-        backgroundColor: '#fff',
-        paddingVertical: 4,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-    },
+  },
+  buttonText: {
+    color: '#367e7f',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#fff',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
 });
 
 export default ListUserPage;

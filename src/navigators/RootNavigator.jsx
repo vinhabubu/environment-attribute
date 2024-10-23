@@ -8,6 +8,7 @@ import SplashPage from '../screens/SplashPage';
 import EditProfilePage from '../screens/EditProfilePage';
 import QrScanPage from '../screens/QrScanPage';
 import AddBuilding from '../screens/admin/AddPage';
+import EditBuildingPage from '../screens/admin/EditBuildingPage';
 
 const StackNavigator = createStackNavigator();
 const screenOptions = {headerShown: false};
@@ -31,6 +32,10 @@ const RootNavigator = () => {
       />
       <StackNavigator.Screen name="QrScanPage" component={QrScanPage} />
       <StackNavigator.Screen name="AddBuildingPage" component={AddBuilding} />
+      <StackNavigator.Screen
+        name="EditBuildingPage"
+        component={EditBuildingPage}
+      />
     </StackNavigator.Navigator>
   );
 };

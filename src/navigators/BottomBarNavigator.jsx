@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 
@@ -66,26 +67,29 @@ const BottomBarNavigator = () => {
           ),
         }}
       />
+       {roleUser === 1 && (
+        <Tab.Screen
+          name="ListUser"
+          component={ListUserPage}
+          options={{
+            tabBarLabel: 'School',
+            tabBarShowLabel: false,
+
+            tabBarIcon: ({focused}) => (
+              <IconName
+                name="users"
+                size={30}
+                color={
+                  focused ? defaultTheme?.colors?.primaryOrange : '#FFFFFF'
+                }
+              />
+            ),
+          }}
+        />
+      )}
       <Tab.Screen
         name="Profile"
-        component={ListUserPage}
-        options={{
-          tabBarLabel: 'School',
-          tabBarShowLabel: false,
-
-          tabBarIcon: ({focused}) => (
-            <IconName
-              name="users"
-              size={30}
-              color={focused ? defaultTheme?.colors?.primaryOrange : '#FFFFFF'}
-            />
-          ),
-        }}
-      />
-      {
-        roleUser === 1 && <Tab.Screen
-        name="Profile"
-        component={  ProfilePage }
+        component={ProfilePage}
         options={{
           tabBarLabel: 'School',
           tabBarShowLabel: false,
@@ -99,7 +103,7 @@ const BottomBarNavigator = () => {
           ),
         }}
       />
-      }
+
     </Tab.Navigator>
   );
 };

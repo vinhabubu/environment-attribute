@@ -9,6 +9,8 @@ import EditProfilePage from '../screens/EditProfilePage';
 import QrScanPage from '../screens/QrScanPage';
 import AddBuilding from '../screens/admin/AddPage';
 import EditBuildingPage from '../screens/admin/EditBuildingPage';
+import MyAttributePage from '../screens/MyAttributePage';
+import DetailAtributeUserPage from '../screens/DetailAtributeUserPage';
 
 const StackNavigator = createStackNavigator();
 const screenOptions = {headerShown: false};
@@ -35,6 +37,10 @@ const RootNavigator = () => {
       <StackNavigator.Screen
         name="EditBuildingPage"
         component={EditBuildingPage}
+      />
+      <StackNavigator.Screen
+        name="DetailUserPage"
+        component={DetailAtributeUserPage}
       />
     </StackNavigator.Navigator>
   );

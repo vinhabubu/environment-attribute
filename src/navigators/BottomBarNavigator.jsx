@@ -67,7 +67,7 @@ const BottomBarNavigator = () => {
           ),
         }}
       />
-       {roleUser === 1 && (
+      {roleUser === 1 && (
         <Tab.Screen
           name="ListUser"
           component={ListUserPage}
@@ -103,7 +103,6 @@ const BottomBarNavigator = () => {
           ),
         }}
       />
-
     </Tab.Navigator>
   );
 };

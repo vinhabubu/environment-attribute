@@ -19,7 +19,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {addUserInfo} from '../redux/reducer/IssueReducer';
 import {useUpdateBuildingMutation} from '../../redux/reducer/RestfulApi';
-import {addAttribute, addIsCreateBuilding} from '../../redux/reducer/IssueReducer';
+import {
+  addAttribute,
+  addIsCreateBuilding,
+} from '../../redux/reducer/IssueReducer';
 
 const EditBuildingPage = () => {
   // State to manage input fields
@@ -36,7 +39,6 @@ const EditBuildingPage = () => {
   const dispatch = useDispatch();
   const [updateBuilding, dataUpdateBuilding] = useUpdateBuildingMutation();
   const isAddAttribute = useSelector(state => state?.issue?.isAddAttribute);
-
 
   // Handler for updating profile
   const handleUpdate = () => {

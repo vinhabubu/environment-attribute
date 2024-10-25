@@ -23,7 +23,7 @@ const EditProfilePage = () => {
   const dataUser = useSelector(state => state?.issue?.dataUser);
   const [username, setUsername] = useState(dataUser?.user?.username);
   const [email, setEmail] = useState(dataUser?.user?.email);
-  const [password, setPassword] = useState('nguyenvinh');
+  const [password, setPassword] = useState(dataUser?.password);
   const navigation = useNavigation();
   const [updateUser, dataUpdateUser] = useUpdateUserMutation();
   const dispatch = useDispatch();

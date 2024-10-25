@@ -1,6 +1,13 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
-import {FlatList, View, Text, StyleSheet, Platform, Image} from 'react-native';
+import {
+  FlatList,
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {
   useGetAllAttributeMutation,
   useGetAttributeByUserMutation,
@@ -9,8 +16,9 @@ import {
 import {useSelector} from 'react-redux';
 import StarRating from 'react-native-star-rating-widget';
 import SelectDropdown from 'react-native-select-dropdown';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/AntDesign';
 
-// Component to render each item in FlatList
 const renderItem = ({item}) => (
   <View style={styles.itemContainer}>
     {/* <Text style={styles.title}>ID: {item._id}</Text> */}
@@ -48,106 +56,42 @@ const renderItem = ({item}) => (
   </View>
 );
 
-const MyAttributePage = () => {
-  const dataUser = useSelector(state => state?.issue?.dataUser);
-  const isAddAttribute = useSelector(state => state?.issue?.isAddAttribute);
-  const [getBuilding, dataBuildings] = useGetBuildingMutation();
-
+const DetailAtributeUserPage = () => {
+  const router = useRoute();
+  const navigation = useNavigation();
+  const idUser = router?.params?.userId;
   const [getAttributeById, dataAtributeById] = useGetAttributeByUserMutation();
-  const [getAllAttribute, dataAllAttribute] = useGetAllAttributeMutation();
-  const [selectedBuilding, setSelectedBuilding] = useState('');
+  const dataUser = useSelector(state => state?.issue?.dataUser);
   const [allComment, setAllComment] = useState([]);
-
-  const handleGetBuilding = async () => {
-    await getBuilding({
-      token: dataUser?.token,
-    });
-  };
-
-  useEffect(() => {
-    if (dataUser?.token) {
-      handleGetBuilding();
-    }
-  }, [dataUser]);
 
   useEffect(() => {
     if (dataUser) {
-      if (dataUser?.user?.roleId === 0) {
-        getAttributeById({
-          id: dataUser?.user?._id,
-          token: dataUser?.token,
-        });
-      } else {
-        getAllAttribute({
-          token: dataUser?.token,
-        });
-      }
+      getAttributeById({
+        id: idUser,
+        token: dataUser?.token,
+      });
     }
-  }, [dataUser, isAddAttribute]);
+  }, [dataUser, idUser]);
 
   useEffect(() => {
-    if (dataAtributeById?.data && dataUser?.user?.roleId === 0) {
+    if (dataAtributeById?.data) {
       setAllComment(dataAtributeById?.data);
     }
   }, [dataAtributeById]);
 
-  useEffect(() => {
-    if (dataAllAttribute?.data) {
-      // console.log('1111');
-      setAllComment(dataAllAttribute?.data);
-    }
-  }, [dataAllAttribute]);
-
-  useEffect(() => {
-    if (selectedBuilding !== '') {
-      const comments = dataAllAttribute?.data?.filter(
-        item => item?.idBuilding === selectedBuilding,
-      );
-      setAllComment(comments);
-    }
-  }, [selectedBuilding]);
-
-  // console.log(dataAtributeById?.error);
   return (
     <View style={styles.container}>
       <View
         style={[styles.header, {paddingTop: Platform.OS === 'ios' ? 50 : 20}]}>
-        <Text style={styles.headerTitle}>
-          {dataUser?.user?.roleId === 0 ? 'History' : 'Comment'}
-        </Text>
+        <Text style={styles.headerTitle}>Comment</Text>
+        <TouchableOpacity
+          style={styles.shareIcon}
+          onPress={() => navigation.goBack()}>
+          {/* Placeholder for share icon */}
+          <Icon name="back" size={30} color={'#FFFFFF'} />
+        </TouchableOpacity>
       </View>
-      <View style={{marginTop: 20, marginLeft: 12}}>
-        {dataBuildings?.data && dataUser?.user?.roleId === 1 && (
-          <SelectDropdown
-            data={dataBuildings?.data}
-            onSelect={(selectedItem, index) => {
-              setSelectedBuilding(selectedItem?._id);
-            }}
-            renderButton={selectedItem => {
-              return (
-                <View style={styles.dropdownButtonStyle}>
-                  <Text style={styles.dropdownButtonTxtStyle}>
-                    {(selectedItem && selectedItem?.name) || 'Select buildings'}
-                  </Text>
-                </View>
-              );
-            }}
-            renderItem={(item, index, isSelected) => {
-              return (
-                <View
-                  style={{
-                    ...styles.dropdownItemStyle,
-                    ...(isSelected && {backgroundColor: '#D2D9DF'}),
-                  }}>
-                  <Text style={styles.dropdownItemTxtStyle}>{item.name}</Text>
-                </View>
-              );
-            }}
-            showsVerticalScrollIndicator={false}
-            dropdownStyle={styles.dropdownMenuStyle}
-          />
-        )}
-      </View>
+
       <View style={styles.flat}>
         <FlatList
           // style={styles.flat}
@@ -274,4 +218,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyAttributePage;
+export default DetailAtributeUserPage;

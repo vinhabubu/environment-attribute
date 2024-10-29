@@ -47,7 +47,9 @@ const LoginScreen = ({navigation}) => {
       dispatch(addUserInfo(dataLogin?.data));
       const dataString = JSON.stringify(dataLogin?.data);
       AsyncStorage.setItem('dataUser', dataString);
-      navigation.navigate('BottomTabNavigator');
+      navigation.navigate('BottomTabNavigator', {
+        screen: 'Home',
+      });
     }
   }, [dataLogin, navigation, dispatch]);
 

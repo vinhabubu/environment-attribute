@@ -58,6 +58,8 @@ const MyAttributePage = () => {
   const [selectedBuilding, setSelectedBuilding] = useState('');
   const [allComment, setAllComment] = useState([]);
 
+  console.log(dataAtributeById?.data);
+
   const handleGetBuilding = async () => {
     await getBuilding({
       token: dataUser?.token,

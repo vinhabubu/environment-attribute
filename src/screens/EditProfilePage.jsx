@@ -69,7 +69,7 @@ const EditProfilePage = () => {
 
   useEffect(() => {
     if (dataUpdateUser?.error) {
-      console.log(dataUpdateUser?.error);
+      // console.log(dataUpdateUser?.error);
       Toast.show({
         type: 'error',
         text1: 'Update failed. Try again',

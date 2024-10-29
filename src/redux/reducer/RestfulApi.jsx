@@ -1,11 +1,12 @@
 // api.js
 import {fetchBaseQuery} from '@reduxjs/toolkit/query';
 import {createApi} from '@reduxjs/toolkit/query/react';
-// import {API_URL} from '@env';
+import {BASE_URL} from '@env';
+
 
 export const RestApi = createApi({
   reducerPath: 'RestApi',
-  baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000/api/'}),
+  baseQuery: fetchBaseQuery({baseUrl: BASE_URL}),
   endpoints: builder => ({
     login: builder.mutation({
       query: credentials => ({
@@ -119,4 +120,5 @@ export const {
   useUpdateBuildingMutation,
   useGetAllAttributeMutation,
   useGetAllUserMutation,
+
 } = RestApi;

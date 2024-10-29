@@ -9,10 +9,12 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {useGetAllUserMutation} from '../../redux/reducer/RestfulApi';
+import {useGetAllUserMutation, useUpdateUserMutation} from '../../redux/reducer/RestfulApi';
 import {useSelector} from 'react-redux';
 import {Modal, Portal, Searchbar} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -24,6 +26,8 @@ const ListUserPage = () => {
   const [filteredData, setFilteredData] = useState([]);
   const navigation = useNavigation();
   const [visible, setVisible] = React.useState(false);
+  const [updateUser, dataUpdateUser] = useUpdateUserMutation();
+  console.log(dataAllUser?.error,'dataAllUser');
 
   const showModal = item => {
     setVisible(true);
@@ -57,6 +61,28 @@ const ListUserPage = () => {
   const handleDetail = item => {
     navigation.navigate('DetailUserPage', {userId: item?._id});
   };
+
+  const handleBlockUser = () => {
+    // console.log(!itemUser.isBlock);
+    updateUser({
+      id: itemUser._id,
+      body: {isBlock: !itemUser.isBlock},
+      token: dataUser?.token,
+    });
+  };
+
+  useEffect(() => {
+    if (dataUpdateUser?.data) {
+      Toast.show({
+        type:'success',
+        text1: 'Update successful',
+      });
+      hideModal();
+      getAllUser({
+        token: dataUser?.token,
+      });
+    }
+  },[dataUpdateUser]);
 
   const containerStyle = {
     backgroundColor: 'white',
@@ -134,7 +160,7 @@ const ListUserPage = () => {
                 : 'Do you sure block user again?  '}
             </Text>
             <View style={styles.viewButtonModal}>
-              <TouchableOpacity style={styles.buttonOk}>
+              <TouchableOpacity style={styles.buttonOk} onPress={handleBlockUser}>
                 <Text style={styles.buttonText}>Yes</Text>
               </TouchableOpacity>
 

@@ -25,7 +25,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {tokens} from 'react-native-paper/lib/typescript/styles/themes/v3/tokens';
 import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
-import {addAttribute} from '../redux/reducer/IssueReducer';
+import {addAttribute, addQrText} from '../redux/reducer/IssueReducer';
 import {resetCache} from '../../metro.config';
 
 const HomePage = () => {
@@ -42,7 +42,7 @@ const HomePage = () => {
   const [nameBuilding, setNameBuilding] = useState('');
   const navigation = useNavigation();
   const qrText = useSelector(state => state?.issue?.qrText);
-  const [defaultBuilding, setDefaultBuilding] = useState({});
+  // const [defaultBuilding, setDefaultBuilding] = useState({});
   const dispatch = useDispatch();
   const isAddAttribute = useSelector(state => state?.issue?.isAddAttribute);
   const dropdownRef = useRef(null);
@@ -75,7 +75,11 @@ const HomePage = () => {
         item => item?.idQr === qrText,
       );
       if (buildings?.length > 0) {
-        setDefaultBuilding(buildings[0]);
+        // setDefaultBuilding(buildings[0]);
+        const index = dataBuildings?.data?.findIndex(
+        item => item?.idQr === qrText,
+      );
+        dropdownRef.current.selectIndex(index);
         // console.log(buildings[0]?._id);
         setSelectedBuilding(buildings[0]?._id);
       } else {
@@ -241,6 +245,7 @@ const HomePage = () => {
   };
 
   const handleScanPage = () => {
+    dispatch(addQrText(''));
     navigation.navigate('QrScanPage');
   };
 
@@ -263,7 +268,7 @@ const HomePage = () => {
           {dataBuildings?.data && (
             <SelectDropdown
               data={dataBuildings?.data}
-              defaultValue={defaultBuilding}
+              // defaultValue={defaultBuilding}
               onSelect={(selectedItem, index) => {
                 setSelectedBuilding(selectedItem?._id);
               }}
